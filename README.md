@@ -1,4 +1,4 @@
-# 📚 Temmam - Your Digital Summaries Hub
+# 📚 Lubb (لُب) - Your Digital Summaries Hub
 
 <div align="center">
 
@@ -11,7 +11,7 @@
 
 ## 🎯 About The Project
 
-Temmam is a modern web application designed to be your central hub for storing and managing summaries of various media content. Whether it's audiobooks 🎧, podcasts 🎙️, or movies 🎬, Temmam helps you keep track of all your media consumption in one organized place.
+Lubb is a modern web application designed to be your central hub for storing and managing summaries of various media content. Whether it's audiobooks 🎧, podcasts 🎙️, or movies 🎬, Lubb helps you keep track of all your media consumption in one organized place.
 
 ### ✨ Key Features
 
