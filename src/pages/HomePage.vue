@@ -39,7 +39,8 @@
 
 <script setup>
 import { ref } from 'vue'
-// import PartnersSection from '@/components/sections/PartnersSection.vue'
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import PopularPodcastsSection from '@/components/sections/PopularPodcastsSection.vue'
 import BrowseTopicsSection from '@/components/sections/BrowseTopicsSection.vue'
 import HeaderSection from '@/components/sections/HeaderSection.vue'
@@ -56,13 +57,31 @@ import ImageSlider from '@/components/ImageSlider.vue'
 // ])
 
 const topics = ref([
-  { name: 'أعمال', image: 'src/assets/images/cat_business.png' },
-  { name: 'تقنية', image: 'src/assets/images/cat_technology.png' },
-  { name: 'رياضة', image: 'src/assets/images/cat_sport.png' },
-  { name: 'صحة', image: 'src/assets/images/cat_healthy.png' }
-]
-)
+      { name: 'أعمال', image: 'src/assets/images/cat_business.png' },
+      { name: 'تقنية', image: 'src/assets/images/cat_technology.png' },
+      { name: 'رياضة', image: 'src/assets/images/cat_sport.png' },
+      { name: 'صحة', image: 'src/assets/images/cat_healthy.png' }
+    ]
+  )
 
+
+const router = useRouter();
+
+onMounted(() => {
+  // Extract query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  const username = urlParams.get('username');
+
+  if (token && username) {
+    // Store in localStorage
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('username', username);
+
+    // Redirect to home page
+    router.push('/');
+  }
+});
 
 </script>
 

@@ -41,6 +41,13 @@
       <!-- Error Message -->
       <p v-if="errorMessage" class="text-red-500 text-center mt-4">{{ errorMessage }}</p>
 
+      <button
+        @click="handleGoogleLogin"
+        class="w-full bg-red-500 text-white mt-4 py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-300"
+      >
+        تسجيل الدخول باستخدام Google
+      </button>
+
       <!-- Sign Up Link -->
       <p class="text-center text-gray-600 mt-4">
         ليس لديك حساب؟
@@ -61,6 +68,12 @@ const password = ref('')
 const loading = ref(false)
 const errorMessage = ref('')
 
+
+const handleGoogleLogin = () => {
+  window.location.href = 'http://127.0.0.1:8000/auth/google';
+};
+
+
 const handleLogin = async () => {
   loading.value = true
   errorMessage.value = ''
@@ -74,8 +87,10 @@ const handleLogin = async () => {
 
     // Save the token in local storage
     const token = response.data.token
+    const username = response.data.user.name
+    // console.log(username)
     localStorage.setItem('authToken', token)
-
+    localStorage.setItem('username', username)
     // Redirect to the home page or dashboard
     router.push('/')
   } catch (error) {

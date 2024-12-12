@@ -1,5 +1,12 @@
 <template>
   <div>
+    <!-- Modal -->
+    <ModalComponent
+      v-show="showAuthModal"
+      title="تسجيل الدخول مطلوب"
+      message="يجب عليك تسجيل الدخول أو إنشاء حساب للاستفادة من هذه الميزة."
+      @close="showAuthModal = false"
+    />
     <HeaderSection />
     <div v-if="loading" class="min-h-screen flex items-center justify-center">
       <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
@@ -132,7 +139,11 @@ import { useRoute, useRouter } from 'vue-router'
 import axiosInstance from '@/utils/axiosConfig.js'
 import HeaderSection from '@/components/sections/HeaderSection.vue'
 import FooterSection from '@/components/sections/FooterSection.vue'
+import ModalComponent from '@/components/ModalComponent.vue'
 
+
+
+const showAuthModal = ref(false)
 const route = useRoute()
 const router = useRouter()
 const targetItem = ref(null)
@@ -148,7 +159,15 @@ const formatDate = (dateString) => {
   })
 }
 
+
 const toggleLike = async () => {
+  if (!userIsAuthenticated()) {
+    showAuthModal.value = true
+    console.log('Modal state:', showAuthModal.value) // Debug
+
+    return
+  }
+
   try {
     const url = `/items/${route.params.id}/${isLiked.value ? 'unlike' : 'like'}`
     const method = isLiked.value ? 'DELETE' : 'POST'
@@ -160,6 +179,11 @@ const toggleLike = async () => {
 }
 
 const toggleSave = async () => {
+  if (!userIsAuthenticated()) {
+    showAuthModal.value = true
+    return
+  }
+
   try {
     const url = `/items/${route.params.id}/${isSaved.value ? 'unsave' : 'save'}`
     const method = isSaved.value ? 'DELETE' : 'POST'
@@ -170,6 +194,10 @@ const toggleSave = async () => {
   }
 }
 
+const userIsAuthenticated = () => {
+  // Replace with your actual logic to check authentication
+  return !!localStorage.getItem('authToken')
+}
 
 // Also update the fetch operation
 onMounted(async () => {
@@ -177,6 +205,12 @@ onMounted(async () => {
     loading.value = true
     const response = await axiosInstance.get(`/items/${route.params.id}`)
     targetItem.value = response.data
+
+    // Fetch like and save states
+    const statesResponse = await axiosInstance.get(`/items/${route.params.id}/states`)
+    isLiked.value = !!statesResponse.data.liked
+    isSaved.value = !!statesResponse.data.saved
+
   } catch (error) {
     console.error('Error fetching podcast:', error)
   } finally {

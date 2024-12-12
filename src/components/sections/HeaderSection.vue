@@ -16,7 +16,7 @@
         </div>
 
         <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center gap-8">
+        <div class="hidden md:flex justify-between items-center gap-8">
           <div class="flex items-center space-x-8">
             <router-link
               v-for="link in navLinks"
@@ -45,25 +45,37 @@
               </button>
             </template>
             <template v-else>
-              <button
-                @click="handleNavigation('/profile')"
-                class="text-gray-600 hover:text-primary transition duration-300 flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-50"
-              >
-                <span class="material-icons">person</span>
-                الملف الشخصي
-              </button>
-              <button
-                @click="logout"
-                class="text-red-600 hover:text-red-800 bg-red-100 px-3 py-1 rounded-full transition duration-300"
-              >
-                تسجيل الخروج
-              </button>
+                <button
+                  @click="handleNavigation('/profile')"
+                  class="text-gray-600 hover:text-primary transition duration-300 flex items-center gap-4 px-4 py-2 rounded-full hover:bg-gray-50"
+                >
+                  <div class="w-10 h-10 ml-4 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    {{ username.charAt(0) }}
+                  </div>
+                </button>
+                <button
+                  @click="logout"
+                  class="text-red-600 hover:text-red-800 bg-red-100 px-3 py-1 rounded-full transition duration-300"
+                >
+                  تسجيل الخروج
+                </button>
             </template>
           </div>
         </div>
 
         <!-- Mobile Menu Button -->
-        <button
+        <div class="flex justify-between items-center">
+          <button
+            v-show="isAuthenticated"
+            @click="handleNavigation('/profile')"
+            class="md:hidden w-full text-center text-gray-600 hover:text-primary px-4 py-2 rounded-full hover:bg-gray-50 transition duration-300 flex items-center gap-2"
+          >
+            <div class="w-8 h-8 ml-4 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+              {{ username?.charAt(0) }}
+            </div>
+          </button>
+
+          <button
           @click="toggleMobileMenu"
           class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition duration-300"
         >
@@ -76,6 +88,7 @@
             ></span>
           </div>
         </button>
+        </div>
       </nav>
 
       <!-- Mobile Menu -->
@@ -107,12 +120,6 @@
           </template>
           <template v-else>
             <button
-              @click="handleNavigation('/profile')"
-              class="w-full text-center text-gray-600 hover:text-primary px-4 py-2 rounded-full hover:bg-gray-50 transition duration-300 flex items-center gap-2"
-            >
-              <span class="material-icons">person</span> الملف الشخصي
-            </button>
-            <button
               @click="logout"
               class="w-full text-center text-red-600 hover:text-red-800 px-4 py-2 rounded-full bg-red-100 transition duration-300"
             >
@@ -132,11 +139,11 @@ import axios from 'axios'
 
 const router = useRouter()
 const route = useRoute()
-
+const username = localStorage.getItem("username")
 const title = ref('لُب')
 const isMobileMenuOpen = ref(false)
 const navLinks = ref([
-  { name: 'اكتشف', path: '/discover' },
+  { name: 'البحث المتقدم', path: '/search&filter' },
   { name: 'الفئات', path: '/categories' },
   { name: 'معلومات عنا', path: '/about' },
 ])
@@ -174,6 +181,7 @@ const logout = async () => {
       }
     })
     localStorage.removeItem('authToken')
+    localStorage.removeItem('username')
     router.push('/login')
   } catch (error) {
     console.error('Logout failed:', error)

@@ -129,7 +129,10 @@ const handleSignup = async () => {
 
     // Save the token in local storage
     const token = response.data.access_token
+    const username = response.data.username
     localStorage.setItem('authToken', token)
+    localStorage.setItem('username', username)
+
 
     // Redirect to the home page or dashboard
     router.push('/')
